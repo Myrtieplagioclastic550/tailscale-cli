@@ -12,6 +12,7 @@ import (
 	"github.com/dimer47/tailscale-cli/cmd/invite"
 	"github.com/dimer47/tailscale-cli/cmd/key"
 	cmdlog "github.com/dimer47/tailscale-cli/cmd/log"
+	mcp_cmd "github.com/dimer47/tailscale-cli/cmd/mcp"
 	"github.com/dimer47/tailscale-cli/cmd/posture"
 	"github.com/dimer47/tailscale-cli/cmd/service"
 	"github.com/dimer47/tailscale-cli/cmd/settings"
@@ -135,6 +136,7 @@ func init() {
 		GetTailnet:      getTailnet,
 	}))
 	rootCmd.AddCommand(auth.NewCmdAuth())
+	rootCmd.AddCommand(mcp_cmd.NewCmdMcpServe())
 	rootCmd.AddCommand(newVersionCmd())
 	rootCmd.AddCommand(newCompletionCmd())
 }

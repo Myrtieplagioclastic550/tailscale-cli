@@ -311,6 +311,73 @@ tailscale-cli completion fish > ~/.config/fish/completions/tailscale-cli.fish
 tailscale-cli completion powershell > tailscale-cli.ps1
 ```
 
+## Intégration MCP (Claude Code, VS Code, JetBrains)
+
+La CLI intègre un serveur [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) qui expose **39 tools** directement utilisables par les assistants IA.
+
+### Configuration
+
+Ajoutez dans vos settings Claude Code (ou VS Code / JetBrains avec l'extension Claude) :
+
+```json
+{
+  "mcpServers": {
+    "tailscale": {
+      "command": "tailscale-cli",
+      "args": ["mcp-serve"],
+      "env": {
+        "TSCLI_API_TOKEN": "tskey-api-xxxxx"
+      }
+    }
+  }
+}
+```
+
+> Si vous avez déjà configuré le token via `tailscale-cli auth login`, le serveur MCP utilisera automatiquement le Keychain macOS — pas besoin de la variable `TSCLI_API_TOKEN`.
+
+### Tools MCP disponibles
+
+| Tool | Description |
+|------|-------------|
+| `device-list` | Liste tous les devices du tailnet |
+| `device-get` | Détails d'un device |
+| `device-authorize` | Autoriser/désautoriser un device |
+| `device-set-tags` | Définir les tags d'un device |
+| `device-set-name` | Renommer un device |
+| `device-expire` | Expirer la clé d'un device |
+| `device-delete` | Supprimer un device |
+| `device-routes-list` | Lister les routes d'un device |
+| `device-routes-set` | Définir les routes d'un device |
+| `acl-get` | Récupérer le policy file (ACL) |
+| `acl-set` | Définir le policy file |
+| `acl-validate` | Valider un policy file |
+| `dns-config-get` | Configuration DNS complète |
+| `dns-nameservers-list/set` | Gérer les nameservers |
+| `dns-preferences-get/set` | MagicDNS on/off |
+| `dns-split-get` | Configuration split DNS |
+| `key-list` | Lister les clés |
+| `key-create` | Créer une auth key |
+| `key-get` / `key-delete` | Détails / suppression d'une clé |
+| `user-list` | Lister les utilisateurs |
+| `user-get` / `user-set-role` | Détails / changer le rôle |
+| `user-approve/suspend/restore` | Gestion du statut utilisateur |
+| `settings-get` / `settings-update` | Paramètres du tailnet |
+| `webhook-list/create/test/delete` | Gestion des webhooks |
+| `service-list/get/hosts` | Gestion des Services |
+| `contact-get` | Contacts du tailnet |
+| `log-audit-list` | Logs d'audit |
+
+### Exemple d'utilisation dans Claude Code
+
+Une fois configuré, vous pouvez simplement dire :
+
+- *"Liste mes devices Tailscale"*
+- *"Quels tags sont définis dans mes ACL ?"*
+- *"Crée une auth key réutilisable avec le tag tag:ci"*
+- *"Active MagicDNS sur mon tailnet"*
+
+Claude appellera automatiquement les bons tools MCP.
+
 ## Développement
 
 ```bash
