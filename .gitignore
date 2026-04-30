@@ -1,0 +1,14 @@
+# Binary
+tailscale-cli
+dist/
+
+# OS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Go
+vendor/
