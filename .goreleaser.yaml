@@ -36,14 +36,15 @@ changelog:
       - "^test:"
       - "^ci:"
 
-brews:
-  - repository:
-      owner: dimer47
-      name: homebrew-tap
-    homepage: https://github.com/dimer47/tailscale-cli
-    description: CLI pour l'API Tailscale v2
-    license: MIT
-    install: |
-      bin.install "tailscale-cli"
-    test: |
-      system "#{bin}/tailscale-cli", "version"
+# Décommenter quand le repo dimer47/homebrew-tap sera créé :
+# brews:
+#   - repository:
+#       owner: dimer47
+#       name: homebrew-tap
+#     homepage: https://github.com/dimer47/tailscale-cli
+#     description: CLI pour l'API Tailscale v2
+#     license: MIT
+#     install: |
+#       bin.install "tailscale-cli"
+#     test: |
+#       system "#{bin}/tailscale-cli", "version"
