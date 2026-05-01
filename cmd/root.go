@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/dimer47/tailscale-cli/cmd/acl"
 	"github.com/dimer47/tailscale-cli/cmd/auth"
@@ -21,6 +22,7 @@ import (
 	"github.com/dimer47/tailscale-cli/internal/api"
 	"github.com/dimer47/tailscale-cli/internal/config"
 	"github.com/dimer47/tailscale-cli/internal/keychain"
+	"github.com/dimer47/tailscale-cli/internal/update"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -148,8 +150,23 @@ func initConfig() {
 
 // Execute runs the root command.
 func Execute() {
+	// Launch update check in background (non-blocking)
+	updateCh := make(chan *update.CheckResult, 1)
+	go func() {
+		updateCh <- update.Check(Version)
+	}()
+
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
+	}
+
+	// Print update notice if available (wait max 1s for the goroutine)
+	select {
+	case result := <-updateCh:
+		if result != nil && result.UpdateAvailable {
+			fmt.Fprint(os.Stderr, result.Message)
+		}
+	case <-time.After(1 * time.Second):
 	}
 }
 
