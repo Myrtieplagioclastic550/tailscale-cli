@@ -20,13 +20,14 @@ func NewCmdAuth() *cobra.Command {
 		Short: "Gestion de l'authentification et des contextes",
 		Long: `Commandes pour gérer l'authentification auprès de l'API Tailscale.
 
-Le token API est stocké de façon sécurisée dans le Keychain macOS.
+Le token API est stocké de façon sécurisée dans le trousseau système
+(macOS Keychain, Windows Credential Manager, Linux Secret Service).
 Il n'est jamais écrit en clair sur le disque.
 
 Priorité de résolution du token :
   1. Flag --api-token
   2. Variable d'environnement TSCLI_API_TOKEN
-  3. Keychain macOS (via 'tailscale-cli auth login')`,
+  3. Trousseau système (via 'tailscale-cli auth login')`,
 	}
 
 	authCmd.AddCommand(newLoginCmd())
@@ -41,9 +42,9 @@ Priorité de résolution du token :
 func newLoginCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "login",
-		Short: "Authentification interactive — stocke le token dans le Keychain macOS",
+		Short: "Authentification interactive — stocke le token dans le trousseau système",
 		Long: `Demande interactivement le token API et le tailnet, puis :
-  - Stocke le token dans le Keychain macOS (chiffré)
+  - Stocke le token dans le trousseau système (chiffré)
   - Sauvegarde le tailnet et le contexte dans ~/.tailscale-cli/config.json
 
 Si un token existe déjà pour ce contexte, il est remplacé.
@@ -51,7 +52,7 @@ Les tokens Tailscale expirent après 1 à 90 jours.
 Relancez 'tailscale-cli auth login' pour mettre à jour un token expiré.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !keychain.IsAvailable() {
-				return fmt.Errorf("le Keychain macOS n'est pas disponible sur ce système")
+				return fmt.Errorf("le trousseau système n'est pas disponible (macOS Keychain, Windows Credential Manager, ou Linux Secret Service requis)")
 			}
 
 			scanner := bufio.NewScanner(os.Stdin)
@@ -106,7 +107,7 @@ Relancez 'tailscale-cli auth login' pour mettre à jour un token expiré.`,
 
 			fmt.Printf("\nContexte %q configuré :\n", contextName)
 			fmt.Printf("  Tailnet : %s\n", tailnet)
-			fmt.Printf("  Token   : stocké dans le Keychain macOS\n")
+			fmt.Printf("  Token   : stocké dans le trousseau système\n")
 			fmt.Printf("\nPour mettre à jour un token expiré, relancez 'tailscale-cli auth login'.\n")
 			return nil
 		},
@@ -147,7 +148,7 @@ func newStatusCmd() *cobra.Command {
 			if token == "" && keychain.IsAvailable() {
 				if t, err := keychain.Get(resolvedName); err == nil && t != "" {
 					token = t
-					tokenSource = "Keychain macOS"
+					tokenSource = "trousseau système"
 				}
 			}
 
@@ -237,7 +238,7 @@ func newListCmd() *cobra.Command {
 				tokenStatus := "pas de token"
 				if keychain.IsAvailable() {
 					if t, err := keychain.Get(name); err == nil && t != "" {
-						tokenStatus = "token dans Keychain"
+						tokenStatus = "token dans trousseau"
 					}
 				}
 				if ctx.APIToken != "" {
@@ -255,7 +256,7 @@ func newListCmd() *cobra.Command {
 func newRemoveCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "remove <context>",
-		Short: "Supprime un contexte et son token du Keychain",
+		Short: "Supprime un contexte et son token du trousseau système",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			contextName := args[0]
@@ -273,7 +274,7 @@ func newRemoveCmd() *cobra.Command {
 			// Supprimer le token du Keychain
 			if keychain.IsAvailable() {
 				if err := keychain.Delete(contextName); err != nil {
-					fmt.Fprintf(os.Stderr, "Avertissement : impossible de supprimer le token du Keychain : %v\n", err)
+					fmt.Fprintf(os.Stderr, "Avertissement : impossible de supprimer le token du trousseau système : %v\n", err)
 				}
 			}
 
@@ -288,7 +289,7 @@ func newRemoveCmd() *cobra.Command {
 				return fmt.Errorf("erreur lors de la sauvegarde de la configuration : %w", err)
 			}
 
-			fmt.Printf("Contexte %q supprimé (token retiré du Keychain).\n", contextName)
+			fmt.Printf("Contexte %q supprimé (token retiré du trousseau système).\n", contextName)
 			return nil
 		},
 	}

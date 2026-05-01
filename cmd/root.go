@@ -37,7 +37,7 @@ le tout depuis votre terminal.
 Configurez votre token API avec 'tailscale-cli auth login' ou via la variable
 d'environnement TSCLI_API_TOKEN.
 
-Le token est stocké de façon sécurisée dans le Keychain macOS.`,
+Le token est stocké de façon sécurisée dans le trousseau système.`,
 }
 
 func init() {
@@ -154,7 +154,7 @@ func Execute() {
 }
 
 // getClient resolves the API token and creates an API client.
-// Priority: 1) --api-token flag  2) TSCLI_API_TOKEN env  3) macOS Keychain  4) config file (legacy)
+// Priority: 1) --api-token flag  2) TSCLI_API_TOKEN env  3) system keyring  4) config file (legacy)
 func getClient() (*api.Client, error) {
 	token := viper.GetString("api-token")
 
@@ -178,7 +178,7 @@ func getClient() (*api.Client, error) {
 	return api.NewClient(token, opts...), nil
 }
 
-// resolveTokenFromKeychain tries to get the token from the macOS Keychain.
+// resolveTokenFromKeychain tries to get the token from the system keyring.
 func resolveTokenFromKeychain() string {
 	if !keychain.IsAvailable() {
 		return ""
