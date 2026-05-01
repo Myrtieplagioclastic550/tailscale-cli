@@ -5,7 +5,7 @@ CLI pour l'API Tailscale v2 — gérez votre tailnet depuis le terminal.
 ## Fonctionnalités
 
 - **85 endpoints** couverts : devices, ACL, DNS, clés, utilisateurs, webhooks, services, etc.
-- **Token sécurisé** : stocké dans le Keychain macOS (jamais en clair sur le disque)
+- **Token sécurisé** : stocké dans le trousseau système (macOS Keychain, Windows Credential Manager, Linux Secret Service)
 - **Multi-contextes** : gérez plusieurs comptes Tailscale
 - **Sortie flexible** : table, JSON, YAML, CSV
 - **Multi-plateforme** : macOS, Linux, Windows (amd64 et arm64)
@@ -102,7 +102,7 @@ Token API Tailscale : tskey-api-xxxxx   # Collez votre token
 Tailnet (- pour le tailnet par défaut) : ↵   # Appuyez Entrée
 ```
 
-Le token est stocké dans le **Keychain macOS** (chiffré, jamais en clair sur le disque).
+Le token est stocké dans le **trousseau système** (macOS Keychain, Windows Credential Manager, ou Linux Secret Service) — chiffré, jamais en clair sur le disque.
 
 ### 3. Tester
 
@@ -125,7 +125,7 @@ tailscale-cli settings get
 |----------|--------|-------|
 | 1 | Flag `--api-token` | Tests ponctuels |
 | 2 | Variable `TSCLI_API_TOKEN` | CI/CD, scripts |
-| 3 | Keychain macOS | Usage quotidien (via `auth login`) |
+| 3 | Trousseau système | Usage quotidien (via `auth login`) |
 | 4 | Fichier config (legacy) | Migration depuis anciennes versions |
 
 ### Multi-contextes (plusieurs comptes Tailscale)
@@ -141,8 +141,8 @@ tailscale-cli auth login
 
 # Voir tous les contextes (* = actif)
 tailscale-cli auth list
-# * work     (tailnet: mycompany.com, token dans Keychain)
-#   personal (tailnet: -, token dans Keychain)
+# * work     (tailnet: mycompany.com, token dans trousseau)
+#   personal (tailnet: -, token dans trousseau)
 
 # Changer de contexte
 tailscale-cli auth switch personal
@@ -160,7 +160,7 @@ Les tokens Tailscale expirent après 1 à 90 jours. Quand un token expire :
 
 ```bash
 tailscale-cli auth status
-# Token : ****abcd1234 (source: Keychain macOS)
+# Token : ****abcd1234 (source: trousseau système)
 # Statut : invalide ou expiré
 
 # Créez un nouveau token sur https://login.tailscale.com/admin/settings/keys
@@ -333,7 +333,7 @@ Ajoutez dans vos settings Claude Code (ou VS Code / JetBrains avec l'extension C
 }
 ```
 
-> Si vous avez déjà configuré le token via `tailscale-cli auth login`, le serveur MCP utilisera automatiquement le Keychain macOS — pas besoin de la variable `TSCLI_API_TOKEN`.
+> Si vous avez déjà configuré le token via `tailscale-cli auth login`, le serveur MCP utilisera automatiquement le trousseau système — pas besoin de la variable `TSCLI_API_TOKEN`.
 
 ### Tools MCP disponibles
 
