@@ -140,6 +140,7 @@ func init() {
 	rootCmd.AddCommand(auth.NewCmdAuth())
 	rootCmd.AddCommand(mcp_cmd.NewCmdMcpServe())
 	rootCmd.AddCommand(newVersionCmd())
+	rootCmd.AddCommand(newSelfUpdateCmd())
 	rootCmd.AddCommand(newCompletionCmd())
 }
 

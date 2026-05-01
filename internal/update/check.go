@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"time"
 )
@@ -122,35 +121,18 @@ func isNewer(a, b string) bool {
 }
 
 func formatUpdateMessage(current, latest string) string {
-	msg := fmt.Sprintf(
-		"\n  Une nouvelle version de tailscale-cli est disponible : %s → %s\n",
+	return fmt.Sprintf(
+		"\n  Une nouvelle version de tailscale-cli est disponible : %s → %s\n  Mise à jour :  tailscale-cli self-update\n",
 		current, latest,
 	)
+}
 
-	switch runtime.GOOS {
-	case "darwin":
-		arch := "arm64"
-		if runtime.GOARCH == "amd64" {
-			arch = "amd64"
-		}
-		msg += fmt.Sprintf(
-			"  Mise à jour :  curl -sL https://github.com/%s/%s/releases/latest/download/%s_darwin_%s.tar.gz | tar xz && sudo mv %s /usr/local/bin/\n",
-			repoOwner, repoName, repoName, arch, repoName,
-		)
-	case "linux":
-		arch := runtime.GOARCH
-		msg += fmt.Sprintf(
-			"  Mise à jour :  curl -sL https://github.com/%s/%s/releases/latest/download/%s_linux_%s.tar.gz | tar xz && sudo mv %s /usr/local/bin/\n",
-			repoOwner, repoName, repoName, arch, repoName,
-		)
-	default:
-		msg += fmt.Sprintf(
-			"  Mise à jour :  https://github.com/%s/%s/releases/latest\n",
-			repoOwner, repoName,
-		)
+// ClearCache removes the update check cache file.
+func ClearCache() {
+	path := cachePath()
+	if path != "" {
+		_ = os.Remove(path)
 	}
-
-	return msg
 }
 
 func cachePath() string {
