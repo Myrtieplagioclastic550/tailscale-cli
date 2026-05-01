@@ -12,3 +12,6 @@ dist/
 
 # Go
 vendor/
+
+# Playwright MCP
+.playwright-mcp/
