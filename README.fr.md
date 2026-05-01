@@ -79,6 +79,20 @@ tailscale-cli version
 # tailscale-cli version 0.1.0 (commit: abc1234, built: 2026-04-30T21:46:43Z)
 ```
 
+## Mise à jour
+
+La CLI vérifie automatiquement les nouvelles versions au démarrage et vous notifie quand une mise à jour est disponible.
+
+```bash
+# Mettre à jour vers la dernière version
+tailscale-cli self-update
+
+# Vérifier les mises à jour sans installer
+tailscale-cli self-update --check
+```
+
+La mise à jour est téléchargée depuis GitHub Releases et remplace le binaire actuel. Si le binaire est dans un répertoire protégé (ex : `/usr/local/bin/`), `sudo` sera demandé automatiquement.
+
 ## Démarrage rapide
 
 ### 1. Obtenir un token API Tailscale

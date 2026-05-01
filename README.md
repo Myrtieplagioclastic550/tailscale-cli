@@ -82,6 +82,20 @@ tailscale-cli version
 # tailscale-cli version 0.2.0 (commit: abc1234, built: 2026-04-30T22:10:36Z)
 ```
 
+## Updating
+
+The CLI automatically checks for new versions at startup and notifies you when an update is available.
+
+```bash
+# Update to the latest version
+tailscale-cli self-update
+
+# Check for updates without installing
+tailscale-cli self-update --check
+```
+
+The update is downloaded from GitHub Releases and replaces the current binary in place. If the binary is in a protected directory (e.g. `/usr/local/bin/`), `sudo` will be requested automatically.
+
 ## Quick Start
 
 ### 1. Get a Tailscale API token
